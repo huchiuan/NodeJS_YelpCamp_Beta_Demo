@@ -21,7 +21,9 @@ db.once('open', ()=>{
 const app=express();
 
 app.set('view engine','ejs');
-app.set('views',path.join(__dirname,'views')) //去views資料夾拿ejs
+app.set('views',path.join(__dirname,'views')); //去views資料夾拿ejs
+
+app.use(express.urlencoded({extended:true})); //可以解析req內的東西
 
 app.get('/',(req,res)=>{
     res.send('home')
@@ -32,6 +34,20 @@ app.get('/campgrounds',async(req,res)=>{
    //而yelp-camp有東西是因為在SEEDS裡面建立完成。
    res.render('campgrounds/index',{campgrounds})
 })
+
+
+app.get('/campgrounds/new',(req,res)=>{
+
+    res.render('campgrounds/new')
+ })
+
+app.post('/campgrounds',async(req,res)=>{
+    console.log(req.body.campground);
+    const campground = await Campground(req.body.campground);
+    await campground.save();//moogose的語法
+    res.redirect(`/campgrounds/${campground._id}`)
+})
+
 
 app.get('/campgrounds/:id',async(req,res)=>{
     const campground = await Campground.findById(req.params.id);
