@@ -21,21 +21,24 @@ db.once('open', ()=>{
 const app=express();
 
 app.set('view engine','ejs');
-app.set('views',path.join(__dirname,'views'))
+app.set('views',path.join(__dirname,'views')) //去views資料夾拿ejs
 
 app.get('/',(req,res)=>{
     res.send('home')
 })
 
 app.get('/campgrounds',async(req,res)=>{
-   const campgrounds = await Campground.find({});
+   const campgrounds = await Campground.find({});  //Model.find() 是mongoose裡面的fun 可以去mongodb拿資料 (此頁的yelp-camp，)
+   //而yelp-camp有東西是因為在SEEDS裡面建立完成。
    res.render('campgrounds/index',{campgrounds})
 })
-// app.get('/makecampground', async(req,res)=>{
-//     const camp = new Campground({title:"我後院",desciption:"便宜"});
-//     await camp.save();
-//     res.send(camp)
-// })
+
+app.get('/campgrounds/:id',async(req,res)=>{
+    const campground = await Campground.findById(req.params.id);
+    res.render('campgrounds/show',{campground});
+ })
+
+
 
 app.listen(3000,()=>{
    console.log('Serving on port 3000')
