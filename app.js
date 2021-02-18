@@ -47,7 +47,7 @@ app.post('/campgrounds',async(req,res)=>{
     console.log(req.body.campground);//{ title: '333333', location: '33322' }
     const campground = await Campground(req.body.campground);
     await campground.save();//moogose的語法
-    res.redirect(`/campgrounds/${campground._id}`)
+    res.redirect(`/campgrounds/${campground._id}`)//._id 是在DB裡產生的 為了要拿取所以要加_ 代表拿自己的
 })
 
 
@@ -63,10 +63,19 @@ app.get('/campgrounds/:id',async(req,res)=>{
  })
 
  app.put('/campgrounds/:id',async(req,res)=>{
-    const{id} =req.params;
-    const campground = await Campground.findByIdAndUpdate(id,{...req.body.campground});
+    const campground = await Campground.findByIdAndUpdate(req.params.id,{...req.body.campground});
+    //const aString = "foo"
+    //const chars = [ ...aString ] // [ "f", "o", "o" ]
+    console.log(req.body.campground);
     res.redirect(`/campgrounds/${campground._id}`)
  })
+
+ app.delete('/campgrounds/:id',async(req,res)=>{
+    const {id} =req.params;
+    await Campground.findByIdAndDelete(id);
+    res.redirect('/campgrounds');
+ })
+
 
 app.listen(3000,()=>{
    console.log('Serving on port 3000')
