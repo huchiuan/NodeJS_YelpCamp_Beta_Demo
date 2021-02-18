@@ -27,11 +27,15 @@ app.get('/',(req,res)=>{
     res.send('home')
 })
 
-app.get('/makecampground', async(req,res)=>{
-    const camp = new Campground({title:"我後院",desciption:"便宜"});
-    await camp.save();
-    res.send(camp)
+app.get('/campgrounds',async(req,res)=>{
+   const campgrounds = await Campground.find({});
+   res.render('campgrounds/index',{campgrounds})
 })
+// app.get('/makecampground', async(req,res)=>{
+//     const camp = new Campground({title:"我後院",desciption:"便宜"});
+//     await camp.save();
+//     res.send(camp)
+// })
 
 app.listen(3000,()=>{
    console.log('Serving on port 3000')
